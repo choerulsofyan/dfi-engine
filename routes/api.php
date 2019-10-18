@@ -13,6 +13,19 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::post('login', 'AuthController@login');
+Route::post('register', 'AuthController@register');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('user', 'AuthController@details');
+    Route::resource('articles', 'ArticleController')->except(['create', 'edit']);
+    Route::resource('categories', 'CategoryController')->except(['create', 'edit']);
+});
+
+Route::fallback(function(){
+    return response()->json([
+        'message' => 'Page Not Found'], 404);
 });
