@@ -16,7 +16,7 @@ class ArticleController extends Controller
     public function index()
     {
         $articles = DB::table('articles')
-        ->join('categories', 'articles.article_id', '=', 'categories.id')
+        ->join('categories', 'articles.category_id', '=', 'categories.id')
         ->join('users', 'articles.user_id', '=', 'users.id')
         ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS article', 'articles.created_at', 'users.name as author', 'articles.status')
             ->orderBy('created_at', 'DESC')->get();
@@ -43,15 +43,19 @@ class ArticleController extends Controller
         $request->validate([
             'title' => 'required|string|unique:articles',
             'content' => 'required|string',
-            'image' => 'required|string',
-            'article' => 'required|integer'
+            'image' => 'string',
+            'category_id' => 'required|integer',
+            'user_id' => 'required|integer',
+            'status' => 'required|string'
         ]);
 
         $article = Article::firstOrCreate([
             'title' => $request->title,
             'content' => $request->content,
             'image' => $request->image,
-            'article_id' => $request->article
+            'category_id' => $request->category_id,
+            'user_id' => $request->user_id,
+            'status' => $request->status
         ]);
 
         return response()->json($article, 201);
@@ -66,7 +70,7 @@ class ArticleController extends Controller
     public function show(Article $article)
     {
         $article = DB::table('articles')
-            ->join('categories', 'articles.article_id', '=', 'categories.id')
+            ->join('categories', 'articles.category_id', '=', 'categories.id')
             ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS article', 'articles.created_at')
             ->where('articles.id', '=', $article->id)
             ->first();
@@ -88,10 +92,12 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         $request->validate([
-            'title' => 'required|string|unique:articles,title,' . $article->id,
+            'title' => 'required|string|unique:articles',
             'content' => 'required|string',
-            'image' => 'required|string',
-            'article' => 'required|integer'
+            'image' => 'string',
+            'category_id' => 'required|integer',
+            'user_id' => 'required|integer',
+            'status' => 'required|string'
         ]);
 
         $article->update($request->all());
