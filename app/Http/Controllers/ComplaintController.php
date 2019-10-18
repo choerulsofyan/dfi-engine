@@ -14,17 +14,8 @@ class ComplaintController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $complaints = Complaint::orderBy('created_at', 'DESC')->get();
+        return response()->json($complaints);
     }
 
     /**
@@ -35,7 +26,19 @@ class ComplaintController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'email' => 'required|string',
+            'subject' => 'required|string',
+            'description' => 'required|string'
+        ]);
+
+        $complaint = Complaint::create([
+            'email' => $request->email,
+            'subject' => $request->subject,
+            'description' => $request->description
+        ]);
+
+        return response()->json($complaint, 201);
     }
 
     /**
@@ -46,30 +49,7 @@ class ComplaintController extends Controller
      */
     public function show(Complaint $complaint)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Complaint  $complaint
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Complaint $complaint)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Complaint  $complaint
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Complaint $complaint)
-    {
-        //
+        return response()->json($complaint);
     }
 
     /**
@@ -80,6 +60,7 @@ class ComplaintController extends Controller
      */
     public function destroy(Complaint $complaint)
     {
-        //
+        $complaint->delete();
+        return response()->json('Category deleted successfully');
     }
 }

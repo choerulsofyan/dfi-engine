@@ -14,17 +14,8 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $comment = Comment::orderBy('created_at', 'DESC')->get();
+        return response()->json($comment);
     }
 
     /**
@@ -35,7 +26,19 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required|integer',
+            'article_id' => 'required|integer',
+            'content' => 'required|string'
+        ]);
+
+        $comment = Comment::create([
+            'user_id' => $request->user_id,
+            'article_id' => $request->article_id,
+            'content' => $request->content
+        ]);
+
+        return response()->json($comment, 201);
     }
 
     /**
@@ -46,18 +49,7 @@ class CommentController extends Controller
      */
     public function show(Comment $comment)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Comment $comment)
-    {
-        //
+        return response()->json($comment);
     }
 
     /**
@@ -69,7 +61,13 @@ class CommentController extends Controller
      */
     public function update(Request $request, Comment $comment)
     {
-        //
+        $this->validate($request, [
+            'content' => 'required|string'
+        ]);
+
+        $comment->update($request->all());
+
+        return response()->json($comment);
     }
 
     /**
@@ -80,6 +78,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
+        $comment->delete();
+        return response()->json('Category deleted successfully');
     }
 }

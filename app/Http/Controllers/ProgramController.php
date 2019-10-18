@@ -14,17 +14,8 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $programs = Program::orderBy('created_at', 'DESC')->get();
+        return response()->json($programs);
     }
 
     /**
@@ -35,7 +26,21 @@ class ProgramController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string|unique:programs',
+            'type' => 'required|string',
+            'agency' => 'required|string'
+        ]);
+
+        $program = Program::firstOrCreate([
+            'name' => $request->name,
+            'email' => $request->email,
+            'type' => $request->type,
+            'agency' => $request->agency
+        ]);
+
+        return response()->json($program, 201);
     }
 
     /**
@@ -46,18 +51,7 @@ class ProgramController extends Controller
      */
     public function show(Program $program)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Program  $program
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Program $program)
-    {
-        //
+        return response()->json($program);
     }
 
     /**
@@ -69,7 +63,16 @@ class ProgramController extends Controller
      */
     public function update(Request $request, Program $program)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string|unique:programs,email,' . $id,
+            'type' => 'required|string',
+            'agency' => 'required|string'
+        ]);
+
+        $program->update($request->all());
+
+        return response()->json($program);
     }
 
     /**
@@ -80,6 +83,7 @@ class ProgramController extends Controller
      */
     public function destroy(Program $program)
     {
-        //
+        $program->delete();
+        return response()->json('Program deleted successfully');
     }
 }
