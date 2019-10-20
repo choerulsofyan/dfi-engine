@@ -29,7 +29,7 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|unique:categories',
-            'description' => 'required|string'
+            'description' => 'string'
         ]);
 
         $category = Category::create([
@@ -62,7 +62,7 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|unique:categories,name,' . $category->id,
-            'description' => 'required|string'
+            'description' => 'string'
         ]);
 
         $category->update($request->all());
