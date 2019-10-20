@@ -18,7 +18,7 @@ class ArticleController extends Controller
         $articles = DB::table('articles')
         ->join('categories', 'articles.category_id', '=', 'categories.id')
         ->join('users', 'articles.user_id', '=', 'users.id')
-        ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS article', 'articles.created_at', 'users.name as author', 'articles.status')
+        ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as author', 'articles.status')
             ->orderBy('created_at', 'DESC')->get();
 
         foreach ($articles as $key => $value) {
@@ -44,8 +44,8 @@ class ArticleController extends Controller
             'title' => 'required|string|unique:articles',
             'content' => 'required|string',
             'image' => 'string',
-            'category_id' => 'required|integer',
-            'user_id' => 'required|integer',
+            'category' => 'required|integer',
+            'user' => 'required|integer',
             'status' => 'required|string'
         ]);
 
@@ -53,8 +53,8 @@ class ArticleController extends Controller
             'title' => $request->title,
             'content' => $request->content,
             'image' => $request->image,
-            'category_id' => $request->category_id,
-            'user_id' => $request->user_id,
+            'category_id' => $request->category,
+            'user_id' => $request->user,
             'status' => $request->status
         ]);
 
@@ -71,7 +71,8 @@ class ArticleController extends Controller
     {
         $article = DB::table('articles')
             ->join('categories', 'articles.category_id', '=', 'categories.id')
-            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS article', 'articles.created_at')
+            ->join('users', 'articles.user_id', '=', 'users.id')
+            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.id AS category', 'articles.created_at', 'users.id as user')
             ->where('articles.id', '=', $article->id)
             ->first();
 
@@ -92,15 +93,22 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         $request->validate([
-            'title' => 'required|string|unique:articles',
+            'title' => 'required|string|unique:articles,title,' . $article->id,
             'content' => 'required|string',
             'image' => 'string',
-            'category_id' => 'required|integer',
-            'user_id' => 'required|integer',
+            'category' => 'required|integer',
+            'user' => 'required|integer',
             'status' => 'required|string'
         ]);
 
-        $article->update($request->all());
+        $article->update([
+            'title' => $request->title,
+            'content' => $request->content,
+            'image' => $request->image,
+            'category_id' => $request->category,
+            'user_id' => $request->user,
+            'status' => $request->status
+        ]);
 
         return response()->json($article);
     }
