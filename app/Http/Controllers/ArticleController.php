@@ -72,7 +72,7 @@ class ArticleController extends Controller
         $article = DB::table('articles')
             ->join('categories', 'articles.category_id', '=', 'categories.id')
             ->join('users', 'articles.user_id', '=', 'users.id')
-            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.id AS category', 'articles.created_at', 'users.id as user')
+            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as user')
             ->where('articles.id', '=', $article->id)
             ->first();
 
