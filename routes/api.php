@@ -30,6 +30,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('complaints', 'ComplaintController')->except(['store', 'create', 'edit', 'update']);
     Route::resource('programs', 'ProgramController')->except(['create', 'edit', 'update']);
     Route::resource('subscriptions', 'SubscriptionController')->except(['create', 'edit', 'update', 'store']);
+    Route::resource('users', 'UserController')->except(['create', 'edit']);
 });
 
 Route::fallback(function(){
