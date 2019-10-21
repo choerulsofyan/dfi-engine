@@ -145,4 +145,41 @@ class ArticleController extends Controller
 
         return response()->json($data);
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function recent($count)
+    {
+        $articles = DB::table('articles')
+        ->join('categories', 'articles.category_id', '=', 'categories.id')
+        ->join('users', 'articles.user_id', '=', 'users.id')
+        ->select('articles.id', 'articles.title', 'articles.created_at', 'users.name as author')
+        ->limit($count)
+        ->orderBy('created_at', 'DESC')->get();
+
+        foreach ($articles as $key => $value) {
+            $articles[$key]->created_at = date('d F Y', strtotime($value->created_at));
+            $articles[$key]->title = str_limit($value->title, 16);
+        }
+
+        $data = array("status" => 200, "results" => $articles);
+
+        return response()->json($data);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function countArticles()
+    {
+        $articles_count = DB::table('articles')->count();
+        $data = array("status" => 200, "results" => $articles_count);
+
+        return response()->json($data);
+    }
 }

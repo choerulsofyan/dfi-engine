@@ -29,6 +29,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'AuthController@details');
+    Route::get('count/articles', 'ArticleController@countArticles');
+    Route::get('count/comments', 'CommentController@countComments');
+    Route::get('count/complaints', 'ComplaintController@countComplaints');
+    Route::get('count/programs', 'ProgramController@countPrograms');
+    Route::get('articles/recent/{count}', 'ArticleController@recent');
+    Route::get('comments/recent/{count}', 'CommentController@recent');
     Route::resource('articles', 'ArticleController')->except(['create', 'edit', 'index', 'show']);
     Route::resource('categories', 'CategoryController')->except(['create', 'edit']);
     Route::resource('complaints', 'ComplaintController')->except(['store', 'create', 'edit', 'update']);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Complaint;
 use Illuminate\Http\Request;
+use DB;
 
 class ComplaintController extends Controller
 {
@@ -62,5 +63,18 @@ class ComplaintController extends Controller
     {
         $complaint->delete();
         return response()->json('Category deleted successfully');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function countComplaints()
+    {
+        $complaints_count = DB::table('complaints')->count();
+        $data = array("status" => 200, "results" => $complaints_count);
+
+        return response()->json($data);
     }
 }

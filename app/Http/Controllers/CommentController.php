@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Comment;
 use Illuminate\Http\Request;
+use DB;
 
 class CommentController extends Controller
 {
@@ -80,5 +81,34 @@ class CommentController extends Controller
     {
         $comment->delete();
         return response()->json('Category deleted successfully');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function recent($count)
+    {
+        $comments = DB::table('comments')
+            ->join('articles', 'comments.article_id', '=', 'articles.id')
+            ->select('comments.content', 'articles.title as article', 'comments.created_at')
+            ->limit($count)
+            ->orderBy('created_at', 'DESC')->get();
+
+        return response()->json($comments);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function countComments()
+    {
+        $comments_count = DB::table('comments')->count();
+        $data = array("status" => 200, "results" => $comments_count);
+
+        return response()->json($data);
     }
 }

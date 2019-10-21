@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Program;
 use Illuminate\Http\Request;
+use DB;
 
 class ProgramController extends Controller
 {
@@ -65,7 +66,7 @@ class ProgramController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'email' => 'required|string|unique:programs,email,' . $id,
+            'email' => 'required|string|unique:programs,email,' . $program->id,
             'type' => 'required|string',
             'agency' => 'required|string'
         ]);
@@ -85,5 +86,18 @@ class ProgramController extends Controller
     {
         $program->delete();
         return response()->json('Program deleted successfully');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function countPrograms()
+    {
+        $programs_count = DB::table('programs')->count();
+        $data = array("status" => 200, "results" => $programs_count);
+
+        return response()->json($data);
     }
 }
