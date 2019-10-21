@@ -15,7 +15,11 @@ use Illuminate\Http\Request;
 
 Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
+Route::get('articles', 'ArticleController@index');
+Route::get('articles/{article}', 'ArticleController@show');
+Route::get('articles/{id}/comments', ['uses' => 'ArticleController@comments']);
 Route::post('complaints', 'ComplaintController@store');
+Route::post('comments', 'CommentController@store');
 Route::post('programs', 'ProgramController@store');
 Route::post('subscriptions', 'SubscriptionController@store');
 
@@ -25,10 +29,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'AuthController@details');
-    Route::resource('articles', 'ArticleController')->except(['create', 'edit']);
+    Route::resource('articles', 'ArticleController')->except(['create', 'edit', 'index', 'show']);
     Route::resource('categories', 'CategoryController')->except(['create', 'edit']);
     Route::resource('complaints', 'ComplaintController')->except(['store', 'create', 'edit', 'update']);
-    Route::resource('programs', 'ProgramController')->except(['create', 'edit', 'update']);
+    Route::resource('programs', 'ProgramController')->except(['create', 'edit', 'update', 'store']);
     Route::resource('subscriptions', 'SubscriptionController')->except(['create', 'edit', 'update', 'store']);
     Route::resource('users', 'UserController')->except(['create', 'edit']);
 });
