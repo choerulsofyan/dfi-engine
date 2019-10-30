@@ -228,13 +228,23 @@ class ArticleController extends Controller
         return response()->json($data);
     }
 
-    public function category($id)
+    public function category($id, $offset, $limit)
     {
+        if (!$offset) {
+            $offset = 0;
+        }
+
+        if (!$limit) {
+            $limit = 12;
+        }
+
         $articles = DB::table('articles')
         ->join('categories', 'articles.category_id', '=', 'categories.id')
         ->join('users', 'articles.user_id', '=', 'users.id')
         ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as author', 'articles.status')
         ->where('articles.category_id', '=', $id)
+        ->offset($offset)
+        ->limit($limit)
         ->orderBy('created_at', 'DESC')->get();
 
         foreach ($articles as $key => $value) {

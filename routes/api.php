@@ -16,11 +16,12 @@ use Illuminate\Http\Request;
 Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
 Route::get('articles', 'ArticleController@index');
+Route::get('articles/category/{id}/{offset}/{limit}', 'ArticleController@category');
 Route::get('articles/category/{id}', 'ArticleController@category');
 Route::get('articles/{article}', 'ArticleController@show');
 Route::get('articles/{id}/comments', ['uses' => 'ArticleController@comments']);
 Route::post('complaints', 'ComplaintController@store');
-Route::post('comments', 'CommentController@store');
+Route::resource('comments', 'CommentController')->except(['create', 'edit', 'index']);
 Route::post('programs', 'ProgramController@store');
 Route::post('subscriptions', 'SubscriptionController@store');
 
