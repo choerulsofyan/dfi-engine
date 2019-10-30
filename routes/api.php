@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
 Route::get('articles', 'ArticleController@index');
+Route::get('articles/category/{id}', 'ArticleController@category');
 Route::get('articles/{article}', 'ArticleController@show');
 Route::get('articles/{id}/comments', ['uses' => 'ArticleController@comments']);
 Route::post('complaints', 'ComplaintController@store');

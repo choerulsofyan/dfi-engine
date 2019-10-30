@@ -227,4 +227,24 @@ class ArticleController extends Controller
 
         return response()->json($data);
     }
+
+    public function category($id)
+    {
+        $articles = DB::table('articles')
+        ->join('categories', 'articles.category_id', '=', 'categories.id')
+        ->join('users', 'articles.user_id', '=', 'users.id')
+        ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as author', 'articles.status')
+        ->where('articles.category_id', '=', $id)
+        ->orderBy('created_at', 'DESC')->get();
+
+        foreach ($articles as $key => $value) {
+            $articles[$key]->created_at = date('d F Y', strtotime($value->created_at));
+            $articles[$key]->title = str_limit($value->title, 16);
+            $articles[$key]->content = str_limit($value->content, 230);
+        }
+
+        $data = array("status" => 200, "results" => $articles);
+
+        return response()->json($data);
+    }
 }
