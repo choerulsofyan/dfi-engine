@@ -6,6 +6,7 @@ use App\Article;
 use Illuminate\Http\Request;
 use App\Traits\UploadTrait;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 use DB;
 
 class ArticleController extends Controller
@@ -137,22 +138,85 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
-        $request->validate([
+        $data = json_decode($request->data, true);
+
+        $rules = [
             'title' => 'required|string|unique:articles,title,' . $article->id,
             'content' => 'required|string',
-            'image' => 'string',
             'category' => 'required|integer',
             'user' => 'required|integer',
             'status' => 'required|string'
+        ];
+
+        $validator_data = Validator::make($data, $rules);
+
+        $article_image = "no-image.png";
+
+        if ($validator_data->passes()) {
+
+            if ($request->has('image')) {
+
+                $validator_image = Validator::make(array("image" => $request->image), [
+                    'image' => 'image|mimes:jpeg,png,jpg,gif|max:4096',
+                ]);
+
+                if ($validator_image->passes()) {
+                    // Get image file
+                    $image = $request->file('image');
+
+                    // Make a image name based on user name and current timestamp
+                    $name = str_slug($data['title']).'_'.time();
+
+                    // Define folder path
+                    $folder = '/assets/images/articles/';
+
+                    // Make a file path where image will be stored [ folder path + file name + file extension]
+                    // $filePath = $folder . $name. '.' . $image->getClientOriginalExtension();
+                    $file_name = $name. '.' . $image->getClientOriginalExtension();
+
+                    // Upload image
+                    $this->uploadOne($image, $folder, 'public', $name);
+
+                    // find old image name
+                    $article_old_image = Article::select('image')->where('id', $article->id)->first()->image;
+                    
+                    // delete old image if image is not no-image.png
+                    if ($article_old_image != "no-image.png") {
+                        $image_path = public_path() . $folder . $article_old_image;
+                        if(File::exists($image_path)) {
+                            File::delete($image_path);
+                        }
+                    }
+
+                    // Set user profile image path in database to filePath
+                    $article_image = $file_name;
+                } else {
+                    return response()->json($validator_image->errors()->all());
+                }
+            }
+
+        } else {
+            return response()->json($validator_data->errors()->all());
+        }
+
+        /* $article = Article::firstOrCreate([
+            'title' => $data['title'],
+            'content' => $data['content'],
+            'image' => $article_image,
+            'category_id' => $data['category'],
+            'user_id' => $data['user'],
+            'status' => $data['status']
         ]);
 
+        return response()->json($article, 201); */
+
         $article->update([
-            'title' => $request->title,
-            'content' => $request->content,
-            'image' => $request->image,
-            'category_id' => $request->category,
-            'user_id' => $request->user,
-            'status' => $request->status
+            'title' => $data['title'],
+            'content' => $data['content'],
+            'image' => $article_image,
+            'category_id' => $data['category'],
+            'user_id' => $data['user'],
+            'status' => $data['status']
         ]);
 
         return response()->json($article);
