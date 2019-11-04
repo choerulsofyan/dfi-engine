@@ -37,6 +37,26 @@ class ArticleController extends Controller
         return response()->json($data);
     }
 
+    public function indexPublic()
+    {
+        $articles = DB::table('articles')
+        ->join('categories', 'articles.category_id', '=', 'categories.id')
+        ->join('users', 'articles.user_id', '=', 'users.id')
+        ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as author', 'articles.status')
+        ->where('articles.status', '=', 'PUBLISHED')
+        ->orderBy('created_at', 'DESC')->get();
+
+        foreach ($articles as $key => $value) {
+            $articles[$key]->created_at = date('d F Y', strtotime($value->created_at));
+            $articles[$key]->title = str_limit($value->title, 16);
+            $articles[$key]->content = str_limit($value->content, 230);
+        }
+
+        $data = array("status" => 200, "results" => $articles);
+
+        return response()->json($data);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -120,6 +140,23 @@ class ArticleController extends Controller
             ->join('users', 'articles.user_id', '=', 'users.id')
             ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as user')
             ->where('articles.id', '=', $article->id)
+            ->first();
+
+        $article->created_at = date('d F Y', strtotime($article->created_at));
+
+        $data = array("status" => 200, "results" => $article);
+
+        return response()->json($data);
+    }
+
+    public function showPublic(Article $article)
+    {
+        $article = DB::table('articles')
+            ->join('categories', 'articles.category_id', '=', 'categories.id')
+            ->join('users', 'articles.user_id', '=', 'users.id')
+            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as user')
+            ->where('articles.id', '=', $article->id)
+            ->where('articles.status', '=', 'PUBLISHED')
             ->first();
 
         $article->created_at = date('d F Y', strtotime($article->created_at));
@@ -307,6 +344,7 @@ class ArticleController extends Controller
         ->join('users', 'articles.user_id', '=', 'users.id')
         ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as author', 'articles.status')
         ->where('articles.category_id', '=', $id)
+        ->where('articles.status', '=', 'PUBLISHED')
         ->offset($offset)
         ->limit($limit)
         ->orderBy('created_at', 'DESC')->get();

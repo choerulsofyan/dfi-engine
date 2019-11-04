@@ -15,10 +15,10 @@ use Illuminate\Http\Request;
 
 Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
-Route::get('articles', 'ArticleController@index');
+Route::get('articles-list', 'ArticleController@indexPublic');
 Route::get('articles/category/{id}/{offset}/{limit}', 'ArticleController@category');
 Route::get('articles/category/{id}', 'ArticleController@category');
-Route::get('articles/{article}', 'ArticleController@show');
+Route::get('articles-detail/{article}', 'ArticleController@showPublic');
 Route::get('articles/{id}/comments', ['uses' => 'ArticleController@comments']);
 Route::post('complaints', 'ComplaintController@store');
 Route::resource('comments', 'CommentController')->except(['create', 'edit', 'index']);
@@ -37,7 +37,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('count/programs', 'ProgramController@countPrograms');
     Route::get('articles/recent/{count}', 'ArticleController@recent');
     Route::get('comments/recent/{count}', 'CommentController@recent');
-    Route::resource('articles', 'ArticleController')->except(['create', 'edit', 'index', 'show']);
+    Route::resource('articles', 'ArticleController')->except(['create', 'edit']); // , 'index', 'show'
     Route::resource('categories', 'CategoryController')->except(['create', 'edit']);
     Route::resource('complaints', 'ComplaintController')->except(['store', 'create', 'edit', 'update']);
     Route::resource('programs', 'ProgramController')->except(['create', 'edit', 'update', 'store']);
