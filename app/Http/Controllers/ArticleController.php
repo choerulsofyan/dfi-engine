@@ -329,16 +329,8 @@ class ArticleController extends Controller
         return response()->json($data);
     }
 
-    public function category($id, $offset, $limit)
+    public function category($id, $offset = 0, $limit = 12)
     {
-        if (!$offset) {
-            $offset = 0;
-        }
-
-        if (!$limit) {
-            $limit = 12;
-        }
-
         $articles = DB::table('articles')
         ->join('categories', 'articles.category_id', '=', 'categories.id')
         ->join('users', 'articles.user_id', '=', 'users.id')
