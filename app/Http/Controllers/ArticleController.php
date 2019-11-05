@@ -46,9 +46,9 @@ class ArticleController extends Controller
         ->where('articles.status', '=', 'PUBLISHED')
         ->orderBy('created_at', 'DESC')->get();
 
-        foreach ($articles as $key => $value) {author_name
+        foreach ($articles as $key => $value) {
             $articles[$key]->created_at = date('d F Y', strtotime($value->created_at));
-            $articles[$key]->title = str_limit($value->title, 16);author_name
+            $articles[$key]->title = str_limit($value->title, 16);
             $articles[$key]->content = str_limit($value->content, 230);
         }
 
