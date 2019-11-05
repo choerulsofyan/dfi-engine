@@ -138,7 +138,7 @@ class ArticleController extends Controller
         $article = DB::table('articles')
             ->join('categories', 'articles.category_id', '=', 'categories.id')
             ->join('users', 'articles.user_id', '=', 'users.id')
-            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as user')
+            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.id AS category_id', 'categories.name AS category_name', 'articles.created_at', 'users.id as user_id', 'users.name as user_name')
             ->where('articles.id', '=', $article->id)
             ->first();
 
@@ -154,7 +154,7 @@ class ArticleController extends Controller
         $article = DB::table('articles')
             ->join('categories', 'articles.category_id', '=', 'categories.id')
             ->join('users', 'articles.user_id', '=', 'users.id')
-            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as user')
+            ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.id AS category_id', 'categories.name AS category_name', 'articles.created_at', 'users.id as user_id', 'users.name as user_name', 'articles.status')
             ->where('articles.id', '=', $article->id)
             ->where('articles.status', '=', 'PUBLISHED')
             ->first();
