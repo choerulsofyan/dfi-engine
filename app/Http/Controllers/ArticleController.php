@@ -23,7 +23,7 @@ class ArticleController extends Controller
         $articles = DB::table('articles')
         ->join('categories', 'articles.category_id', '=', 'categories.id')
         ->join('users', 'articles.user_id', '=', 'users.id')
-        ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as author', 'articles.status')
+        ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.id AS category_id', 'categories.name AS category_name', 'articles.created_at', 'users.id as author_id', 'users.name as author_name', 'articles.status')
             ->orderBy('created_at', 'DESC')->get();
 
         foreach ($articles as $key => $value) {
@@ -42,13 +42,13 @@ class ArticleController extends Controller
         $articles = DB::table('articles')
         ->join('categories', 'articles.category_id', '=', 'categories.id')
         ->join('users', 'articles.user_id', '=', 'users.id')
-        ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as author', 'articles.status')
+        ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.id AS category_id', 'categories.name AS category_name', 'articles.created_at', 'users.id as author_id', 'users.name as author_name', 'articles.status')
         ->where('articles.status', '=', 'PUBLISHED')
         ->orderBy('created_at', 'DESC')->get();
 
-        foreach ($articles as $key => $value) {
+        foreach ($articles as $key => $value) {author_name
             $articles[$key]->created_at = date('d F Y', strtotime($value->created_at));
-            $articles[$key]->title = str_limit($value->title, 16);
+            $articles[$key]->title = str_limit($value->title, 16);author_name
             $articles[$key]->content = str_limit($value->content, 230);
         }
 
