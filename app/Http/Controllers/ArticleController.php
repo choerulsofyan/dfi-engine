@@ -334,7 +334,7 @@ class ArticleController extends Controller
         $articles = DB::table('articles')
         ->join('categories', 'articles.category_id', '=', 'categories.id')
         ->join('users', 'articles.user_id', '=', 'users.id')
-        ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.name AS category', 'articles.created_at', 'users.name as author', 'articles.status')
+        ->select('articles.id', 'articles.title', 'articles.content', 'articles.image', 'categories.id AS category_id', 'categories.name AS category_name', 'articles.created_at', 'users.id as author_id', 'users.name as author_name', 'articles.status')
         ->where('articles.category_id', '=', $id)
         ->where('articles.status', '=', 'PUBLISHED')
         ->offset($offset)
