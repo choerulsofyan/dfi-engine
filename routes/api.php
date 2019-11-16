@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::post('login', 'AuthController@login');
+Route::post('logout', 'AuthController@logout');
 Route::post('register', 'AuthController@register');
 Route::get('articles-list', 'ArticleController@indexPublic');
 Route::get('articles/category/{id}/{offset}/{limit}', 'ArticleController@category');
