@@ -30,12 +30,16 @@ class CommentController extends Controller
         $request->validate([
             'user_id' => 'required|integer',
             'article_id' => 'required|integer',
+            'email' => 'required|string',
+            'name' => 'required|string',
             'content' => 'required|string'
         ]);
-
+        
         $comment = Comment::create([
             'user_id' => $request->user_id,
             'article_id' => $request->article_id,
+            'email' => $request->email,
+            'name' => $request->name,
             'content' => $request->content
         ]);
 
