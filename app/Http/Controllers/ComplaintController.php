@@ -77,4 +77,18 @@ class ComplaintController extends Controller
 
         return response()->json($data);
     }
+
+    public function update(Request $request, Complaint $complaint)
+    {
+        $request->validate([
+            'responded' => 'required|boolean'
+        ]);
+
+
+        $complaint = Complaint::find($complaint->id);
+        $complaint->responded = $request->responded;
+        $complaint->save();
+
+        return response()->json($complaint);
+    }
 }

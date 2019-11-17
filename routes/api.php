@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::post('login', 'AuthController@login');
-Route::post('logout', 'AuthController@logout');
+Route::get('logout', 'AuthController@logout');
 Route::post('register', 'AuthController@register');
 Route::get('articles-list', 'ArticleController@indexPublic');
 Route::get('articles/category/{id}/{offset}/{limit}', 'ArticleController@category');
@@ -40,7 +40,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('comments/recent/{count}', 'CommentController@recent');
     Route::resource('articles', 'ArticleController')->except(['create', 'edit']); // , 'index', 'show'
     Route::resource('categories', 'CategoryController')->except(['create', 'edit']);
-    Route::resource('complaints', 'ComplaintController')->except(['store', 'create', 'edit', 'update']);
+    Route::resource('complaints', 'ComplaintController')->except(['store', 'create', 'edit']);
     Route::resource('programs', 'ProgramController')->except(['create', 'edit', 'update', 'store']);
     Route::resource('subscriptions', 'SubscriptionController')->except(['create', 'edit', 'update', 'store']);
     Route::resource('users', 'UserController')->except(['create', 'edit']);
