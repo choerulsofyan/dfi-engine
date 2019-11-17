@@ -37,7 +37,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('count/complaints', 'ComplaintController@countComplaints');
     Route::get('count/programs', 'ProgramController@countPrograms');
     Route::get('articles/recent/{count}', 'ArticleController@recent');
-    Route::get('comments/recent/{count}', 'CommentController@recent');
+    Route::get('comments/recent/{offset}/{limit}', 'CommentController@recent');
     Route::resource('articles', 'ArticleController')->except(['create', 'edit']); // , 'index', 'show'
     Route::resource('categories', 'CategoryController')->except(['create', 'edit']);
     Route::resource('complaints', 'ComplaintController')->except(['store', 'create', 'edit']);

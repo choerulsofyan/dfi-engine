@@ -88,12 +88,13 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function recent($count)
+    public function recent($offset = 0, $limit = 12)
     {
         $comments = DB::table('comments')
             ->join('articles', 'comments.article_id', '=', 'articles.id')
             ->select('comments.content', 'articles.title as article', 'comments.created_at')
-            ->limit($count)
+            ->offset($offset)
+            ->limit($limit)
             ->orderBy('created_at', 'DESC')->get();
 
         return response()->json($comments);
