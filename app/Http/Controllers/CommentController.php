@@ -28,7 +28,6 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|integer',
             'article_id' => 'required|integer',
             'email' => 'required|string',
             'name' => 'required|string',
@@ -36,7 +35,6 @@ class CommentController extends Controller
         ]);
         
         $comment = Comment::create([
-            'user_id' => $request->user_id,
             'article_id' => $request->article_id,
             'email' => $request->email,
             'name' => $request->name,
