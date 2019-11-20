@@ -94,7 +94,7 @@ class CommentController extends Controller
     {
         $comments = DB::table('comments')
             ->join('articles', 'comments.article_id', '=', 'articles.id')
-            ->select('comments.content', 'articles.title as article', 'comments.created_at')
+            ->select('comments.id', 'comments.content', 'articles.title as article', 'comments.created_at')
             ->offset($offset)
             ->limit($limit)
             ->orderBy('created_at', 'DESC')->get();
