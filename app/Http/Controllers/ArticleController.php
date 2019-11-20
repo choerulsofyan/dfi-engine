@@ -279,7 +279,7 @@ class ArticleController extends Controller
      */
     public function comments($id)
     {
-        $comments = Article::find($id)->comments()->select('id', 'content', 'created_at')->orderBy('created_at', 'DESC')->get();
+        $comments = Article::find($id)->comments()->select('id', 'email', 'name', 'content', 'created_at')->orderBy('created_at', 'DESC')->get();
 
         foreach ($comments as $key => $value) {
             $created_at = $value['created_at']->format('d F Y');
