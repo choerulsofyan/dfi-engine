@@ -187,7 +187,7 @@ class ArticleController extends Controller
 
         $validator_data = Validator::make($data, $rules);
 
-        $article_image = "no-image.png";
+        $article_image = null;
 
         if ($validator_data->passes()) {
 
@@ -247,14 +247,19 @@ class ArticleController extends Controller
 
         return response()->json($article, 201); */
 
-        $article->update([
+        $data = array(
             'title' => $data['title'],
             'content' => $data['content'],
-            'image' => $article_image,
             'category_id' => $data['category'],
             'user_id' => $data['user'],
             'status' => $data['status']
-        ]);
+        );
+
+        if (!is_null($article_image)) {
+            $data['image'] = $article_image;
+        }
+
+        $article->update($data);
 
         return response()->json($article);
     }
