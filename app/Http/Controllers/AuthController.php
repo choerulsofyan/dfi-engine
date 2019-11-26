@@ -42,8 +42,17 @@ class AuthController extends Controller
         ];
  
         if (auth()->attempt($credentials)) {
-            $token = auth()->user()->createToken('myApp')->accessToken;
-            return response()->json(['token' => $token], 200);
+			// $token = auth()->user()->createToken('myApp')->accessToken;
+			$user = auth()->user();
+			$token = $user->createToken('myApp')->accessToken;
+
+			unset($user['email_verified_at']);
+			unset($user['created_at']);
+			unset($user['updated_at']);
+
+			$user['token'] = $token;
+
+            return response()->json(['user' => $user], 200);
         } else {
             return response()->json(['error' => 'UnAuthorised'], 401);
         }
